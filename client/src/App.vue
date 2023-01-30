@@ -1,26 +1,19 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class=" bg-slate-200">
+    <HeaderComponent/>
+    <div class="flex" >
+        <SidebarComponent v-if="!($route.name === 'Login')" />
+        <router-view />
+    </div>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HeaderComponent from './components/HeaderComponent.vue'
+import SidebarComponent from './components/SidebarComponent.vue'
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+name: 'App',
+components: {HeaderComponent, SidebarComponent},
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
