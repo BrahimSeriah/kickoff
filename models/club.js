@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const clubSchema =  new mongoose.Schema({
     name: {
@@ -11,8 +11,14 @@ const clubSchema =  new mongoose.Schema({
     },
     logoPath: {
         type: String,
-        default: 'defaultLogo.jpg'
+        default: 'defaultLogo.png'
+    },
+    points: {
+        type: Number,
+        default: 0
     }
 });
-    
-module.exports = mongoose.model("Club", clubSchema);
+
+const ClubModel = mongoose.model("club", clubSchema);
+
+module.exports = ClubModel;

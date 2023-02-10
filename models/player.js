@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const playerSchema = mongoose.Schema({
   firstName: {
     type: String,
     required: true,
   },
-  secondName: {
+  lastName: {
     type: String,
     required: true,
   },
@@ -15,15 +15,24 @@ const playerSchema = mongoose.Schema({
   },
   position: {
     type: String,
-    enum: ['GK', 'CB', 'RB', 'LB', 'DMF', 'CMF', 'RMF', 'LMF', 'AMF', 'RWF', 'LWF', 'SS', 'CF']
+    required: true
   },
   dateOfBirth: {
     type: Date,
     required: true
   },
-  club: {
-    type: {type: mongoose.Types.ObjectId, ref: "Club"}
+  club_id: {
+    type: mongoose.Types.ObjectId, 
+    ref: "club"
+  },
+  yellow_cards: {
+    type: 'number',
+    default: 0
+  },
+  red_card: {
+    type: 'number',
+    default: 0
   }
 });
 
-module.exports = mongoose.model('Player', playerSchema);
+module.exports = mongoose.model('player', playerSchema);

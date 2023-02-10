@@ -19,10 +19,10 @@
                         </div>
                         <div class="h-full">
                             <div class="flex flex-col gap-4" v-if="this.input.accountType === 'club'">
-                                <label for="clubName" class="block">Club</label>
-                                <select v-model="this.input.clubName" id="clubName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <label for="clubId" class="block">Club</label>
+                                <select required v-model="this.input.clubId" id="clubId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     <option value="">Choose a club</option>
-                                    <option  v-for="club in this.clubs" :key="club.key" :value="club.name">{{ club.name }}</option>
+                                    <option  v-for="club in this.clubs" :key="club._id" :value="club._id">{{ club.name }}</option>
                                 </select>
                                 <label for="password" class="block">Password</label>
                                 <input v-model="this.input.password" type="password" id="password"
@@ -31,7 +31,7 @@
                             </div>
                             <div class="flex flex-col gap-4 justify-self-center" v-if="this.input.accountType === 'admin'">
                                 <label for="password" class="block">Admin Password</label>
-                                <input v-model="this.input.password" type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="•••••••••" required>
+                                <input v-model="this.input.password" type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
                             </div>
                         </div>
                         <button class="flex items-center gap-2 self-end py-2 px-6 rounded-2xl bg-app-primary text-white hover:bg-app-secondary ease-in-out duration-300" type="submit">Login <i class="isax isax-login text-base font-medium"/> </button>
@@ -52,7 +52,7 @@ export default {
         return {
             input: {
                 accountType: "club",
-                clubName: "",
+                clubId: "",
                 password: ""
             },
             clubs: []
@@ -60,14 +60,19 @@ export default {
     },
     methods: {
         login() {
-            console.log(this.input);
             axios.post('/api/auth/' + this.input.accountType, this.input)
+            .then((response) => {
+                if (response.status === 200){
+                    localStorage.setItem('jwt', JSON.stringify(response.data));
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token} ${response.data.clubId}`
+                    this.$router.push('/dashboard');
+                }
+            })
         }
     },
     mounted() {
         axios.get('/api/club')
         .then((response) => {
-            console.log(response);
             this.clubs = response.data;
         })
     }
