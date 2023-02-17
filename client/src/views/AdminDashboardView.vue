@@ -80,7 +80,7 @@ export default {
       editClub: null,
       isModal: false,
       isEditModal: false,
-      imageBaseURL: '//localhost:3000/api/images/'
+      imageBaseURL: 'https://kickoff-api.onrender.com/api/images/'
     };
   },
   methods: {
