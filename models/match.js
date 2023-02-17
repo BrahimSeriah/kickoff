@@ -16,6 +16,10 @@ const matchSchema = new mongoose.Schema({
     club2_score: {
         type: Number,
         default: 0
+    },
+    isPlayed: {
+        type: Boolean,
+        default: false
     }
 });
 

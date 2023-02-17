@@ -7,7 +7,8 @@ import axios from 'axios'
 import './assets/tailwind.css'
 import "./assets/icon-sax.css"
 
-
 createApp(App).use(router).use(vClickOutside).mount('#app')
 
-axios.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem('jwt')).token} ${JSON.parse(localStorage.getItem('jwt')).clubId}`
+axios.defaults.baseURL = " http://localhost:3000";
+axios.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem('jwt')).token} ${JSON.parse(localStorage.getItem('jwt')).clubId}`;
+

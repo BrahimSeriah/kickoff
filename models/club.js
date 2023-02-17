@@ -5,6 +5,10 @@ const clubSchema =  new mongoose.Schema({
         type: String,
         required: true
     },
+    fullName: {
+        type: String,
+        default: ""
+    },
     password: {
         type: String,
         required: true,
@@ -14,6 +18,10 @@ const clubSchema =  new mongoose.Schema({
         default: 'defaultLogo.png'
     },
     points: {
+        type: Number,
+        default: 0
+    }, 
+    playedMatches: {
         type: Number,
         default: 0
     }

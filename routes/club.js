@@ -13,7 +13,7 @@ const upload = multer({
             cb(null, 'public/images')
         },
         filename: function (req, file, cb) {
-            cb(null, 'logo-' + req.params.id + '-' + Date.now() + path.extname(file.originalname))
+            cb(null, 'logo-' + req.params.id + path.extname(file.originalname))
         }
     })
 })
@@ -65,6 +65,12 @@ router.get('/:id', (req, res) => {
         res.status(200).send(data)
     });
 });
+
+router.put('/:id', (req, res) => {
+    Club.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, data) => {
+        res.status(200).send(data)
+    })
+})
 
 router.get('/:id/players', (req, res) => {
     Player.find({ club_id: req.params.id }, (err, data) => {

@@ -1,5 +1,4 @@
-<template>
-    
+<template>   
         <AdminDashboardView v-if="this.isUserAdmin"/>
    
         <ClubDashboardView v-else/>
@@ -17,8 +16,8 @@ export default {
             isUserAdmin: false
         }
     },
-    created() {
-        axios.post(
+    async created() {
+        await axios.post(
             '/api/auth/isUserAdmin',
             { jwt: JSON.parse(localStorage.getItem('jwt')).token }
         )

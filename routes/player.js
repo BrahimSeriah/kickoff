@@ -3,6 +3,12 @@ const Player = require('../models/player')
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+    Player.find((err, data) => {
+        res.status(200).send(data);
+    });
+});
+
 router.post('/', (req, res) => {
     Player.insertMany([new Player({
         firstName: req.body.firstName,
@@ -21,6 +27,12 @@ router.post('/', (req, res) => {
             res.status(500).json(err)
         }
     });
+});
+
+router.put('/:id', (req, res) => {
+    Player.findByIdAndUpdate(req.params.id, req.body ,{new: true}, (err, data) => {
+        res.status(200).send(data);
+    })
 });
 
 router.delete('/:id', (req, res) => {

@@ -2,6 +2,10 @@ const express = require('express')
 const cors = require('cors')
 const connectDB = require("./config/db");
 const bodyParser = require('body-parser');
+
+const Match = require('./models/match');
+const Club = require('./models/club');
+
 require('dotenv').config();
 
 const app = express()
@@ -16,6 +20,16 @@ app.use('/api/player', require('./routes/player'));
 
 app.get('/api/images/:path', (req, res) => {
     res.sendFile(__dirname + '/public/images/' + req.params.path);
+});
+
+app.post('/api/match', (req, res) => {
+    Match.insertMany([new Match({
+        club1_id : req.body.club1_id,
+        club2_id : req.body.club2_id
+    })], (err) => {
+        if (!err)
+            res.status(200);
+    });
 });
 
 

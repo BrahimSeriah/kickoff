@@ -11,7 +11,7 @@
           Cancel
         </button>
         <button
-          @click="toggleEditable"
+          @click="handleClick"
           class="text-white px-4 py-2 flex gap-2 rounded-2xl"
           :class="
             !this.editable
@@ -31,7 +31,7 @@
           <input
             class="p-2 text-lg border-b-2 text-black"
             :class="this.editable ? 'bg-slate-100' : 'bg-white'"
-            :value="this.clubData.name"
+            v-model="this.inputData.name"
             :disabled="!editable"
           />
         </div>
@@ -42,7 +42,7 @@
           <input
             class="p-2 text-lg border-b-2 text-black"
             :class="this.editable ? 'bg-slate-100' : 'bg-white'"
-            :value="this.clubData.fullName"
+            v-model="this.inputData.fullName"
             :disabled="!editable"
             placeholder="enter full name"
           />
@@ -102,6 +102,7 @@
             class="flex justify-end items-center gap-2 lg:invisible group-hover:visible"
           >
             <button
+              @click="ToggleEditPlayerModal(player)"
               class="py-1 px-2 bg-yellow-400 hover:bg-yellow-600 text-white rounded-md text-base transition-colors ease-in-out duration-300"
             >
               <i class="isax isax-edit"></i>
@@ -117,11 +118,14 @@
       </tbody>
     </table>
     <NewPlayerModalComponent v-if="isModal" />
+    <EditPlayerModalComponent v-if="isEditModal" :player="this.editPlayer" />
   </div>
 </template>
 
 <script>
 import NewPlayerModalComponent from "@/components/NewPlayerModalComponent.vue";
+import EditPlayerModalComponent from "@/components/EditPlayerModalComponent.vue";
+
 import axios from "axios";
 
 export default {
@@ -129,33 +133,58 @@ export default {
   data() {
     return {
       clubData: {},
+      inputData: {},
       clubPlayers: [],
+      editPlayer: null,
       editable: false,
       isModal: false,
+      isEditModal: false,
       logoSrc: "",
     };
   },
-  components: { NewPlayerModalComponent },
+  components: { NewPlayerModalComponent, EditPlayerModalComponent },
   async created() {
     await axios
       .get("/api/club/" + JSON.parse(localStorage.getItem("jwt")).clubId)
       .then((response) => {
         this.clubData = response.data;
+        this.inputData = {... this.clubData};
       });
     this.updatePlayers();
     this.updateLogo();
   },
-  mounted() {},
   methods: {
     toggleEditable() {
       this.editable = !this.editable;
     },
+    handleClick() {
+      if (this.editable)
+        this.saveChanges();
+      else
+        this.toggleEditable();
+    },
+    saveChanges() {
+      let data = {
+        name: this.inputData.name,
+        fullName: this.inputData.fullName
+      }
+      axios.put('/api/club/' + JSON.parse(localStorage.getItem("jwt")).clubId, data).
+      then((response) => {
+        this.clubData = response.data;
+        this.inputData = {... this.clubData};
+      });
+      this.editable = false;
+    },
     cancel() {
       this.editable = false;
+      this.inputData = {... this.clubData};
     },
     showModal(state) {
       this.isModal = state;
     },
+    showEditModal(state) {
+      this.isEditModal = state
+    },  
     addNewPlayer(input) {
       axios
         .post("/api/player", {
@@ -171,6 +200,10 @@ export default {
             this.showModal(false);
           }
         });
+    },
+    ToggleEditPlayerModal(player) {
+      this.showEditModal(true)
+      this.editPlayer = player;
     },
     updatePlayers() {
       axios
@@ -206,7 +239,7 @@ export default {
     },
     updateLogo() {
       axios.get("/api/images/" + this.clubData.logoPath).then((response) => {
-        this.logoSrc = response.config.url;
+        this.logoSrc = response.config.baseURL + response.config.url;
       });
     },
   },
