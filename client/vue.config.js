@@ -6,7 +6,7 @@ module.exports = defineConfig({
     devServer: {
       proxy: {
         '/api': {
-          target: 'https://kickoff-api.onrender.com',
+          target: 'http://localhost:3000',
         },
       },
     },

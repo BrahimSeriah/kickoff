@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const goalSchema = new mongoose.Schema({
+const redCardSchema = new mongoose.Schema({
     player_id : {
         type: mongoose.Types.ObjectId, 
         ref: "player"
@@ -11,6 +11,6 @@ const goalSchema = new mongoose.Schema({
     }
 });
 
-const goalModel = mongoose.model("goal", goalSchema);
+const redCardModel = mongoose.model("redCard", redCardSchema);
 
-module.exports = goalModel;
+module.exports = redCardModel;

@@ -52,12 +52,19 @@ router.get('/admin', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-    Club.find({}, { name: 1, _id: 1 }, (err, data) => {
+    Club.find({}, { password: 0 }, (err, data) => {
         if (!err)
             res.status(200).json(data)
         else
             res.status(500).json(err)
     })
+});
+
+router.get('/standings', (req, res) => {
+    Club.find({}, { password: 0 })
+        .sort({points: -1, playerMatches: 1})
+        .then((data) => { res.status(200).json(data) })
+        .catch((err) => { res.status(500).json(err) });      
 });
 
 router.get('/:id', (req, res) => {
