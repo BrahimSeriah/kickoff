@@ -62,7 +62,7 @@ router.get('/', (req, res) => {
 
 router.get('/standings', (req, res) => {
     Club.find({}, { password: 0 })
-        .sort({points: -1, playerMatches: 1})
+        .sort({points: -1, playerMatches: 1, goalsFor: -1})
         .then((data) => { res.status(200).json(data) })
         .catch((err) => { res.status(500).json(err) });      
 });
